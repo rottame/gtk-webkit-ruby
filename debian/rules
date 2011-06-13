@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+DEB_RUBY_VERSION = 1.8
+DEB_RUBY_LIBDIR=$(strip $(shell ruby$(DEB_RUBY_VERSION) -rrbconfig -e 'puts Config::CONFIG["rubylibdir"]'))
+DEB_RUBY_ARCHDIR=$(strip $(shell ruby$(DEB_RUBY_VERSION) -rrbconfig -e 'puts Config::CONFIG["archdir"]'))
+pkgdir = $(CURDIR)/debian/tmp
+ruby_libdir_ver = $(pkgdir)$(DEB_RUBY_LIBDIR)
+ruby_archdir_ver = $(pkgdir)$(DEB_RUBY_ARCHDIR)
+DEB_RUBY_INSTALL_ARGS = DESTDIR=$(pkgdir) \
+		        sitelibdir=$(ruby_libdir_ver) \
+		        sitearchdir=$(ruby_archdir_ver)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	/usr/bin/ruby$(DEB_RUBY_VERSION) $(DEB_RUBY_SETUP_RUBY_ARGS) \
+		ext/webkit/extconf.rb $(DEB_RUBY_SETUP_ARGS)
+
+override_dh_auto_install:
+	dh_auto_install -- $(DEB_RUBY_INSTALL_ARGS)
+
+override_dh_strip:
+	for i in $$(sed -n '/Package:.*ruby1.8-dbg/ { s/Package: \(.*\)-dbg/\1/ p }' debian/control) ; do \
+		dh_strip -p$$i --dbg-package=$$i-dbg ; \
+	done
+	dh_strip

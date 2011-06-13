@@ -1,0 +1,11 @@
+libwebkitgtk-ruby (0.1.0-2) unstable; urgency=low
+
+  * LoadStatus enum
+
+ -- Angelo Grossini <angelo@intercom.it>  Fri, 10 Jun 2011 14:19:10 +0200
+
+libwebkitgtk-ruby (0.1.0-1) unstable; urgency=low
+
+  * initial release
+
+ -- Angelo Grossini <angelo@intercom.it>  Fri, 10 Jun 2011 14:19:10 +0200
